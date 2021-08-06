@@ -34,6 +34,15 @@
             marriageEndDate: '',
 
             kidsMaxCount: 6,
+            kidsCountHuman: [
+                'нет детей',
+                'один ребенок',
+                'двое детей',
+                'трое детей',
+                'четверо детей',
+                'пятеро детей',
+                'шестеро детей',
+            ],
 
             kids: [],
             setKidsCount: function (count) {
@@ -302,6 +311,21 @@
                                 Второй чекбокс выбран
                             </span>
                         </template>
+                    </p>
+
+                    <p>
+                        <h3>Дети</h3>
+                        <h4>Вариант первый</h4>
+                        <template x-if="kids.length===0"><span>нет детей</span></template>
+                        <template x-if="kids.length===1"><span>одного ребенка</span></template>
+                        <template x-if="kids.length===2"><span>двоих детей</span></template>
+                        <template x-if="kids.length===3"><span>трое детей</span></template>
+                        <template x-if="kids.length===4"><span>четверо детей</span></template>
+                        <template x-if="kids.length===5"><span>пять детей</span></template>
+                        <template x-if="kids.length===6"><span>шесть детей</span></template>
+                        <hr>
+                        <h4>Вариант второй (по идее, более правильный)</h4>
+                        <span x-text="kidsCountHuman[kids.length]"></span>
                     </p>
 
                 </div>
