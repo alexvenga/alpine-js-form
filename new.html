@@ -111,6 +111,23 @@
                     <input type="text" class="form-control" id="plaintiffFIO" placeholder="Ф.И.О. истца"
                            x-model="plaintiffFIO">
                 </div>
+
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+                <link href="https://cdn.jsdelivr.net/npm/suggestions-jquery@21.6.0/dist/css/suggestions.min.css" rel="stylesheet" />
+                <script src="https://cdn.jsdelivr.net/npm/suggestions-jquery@21.6.0/dist/js/jquery.suggestions.min.js"></script>
+
+                <script>
+                    $("#plaintiffFIO").suggestions({
+                        token: "7d365b045b496d3ab99d7f2080b5fec014865739",
+                        type: "NAME",
+                        /* Вызывается, когда пользователь выбирает одну из подсказок */
+                        onSelect: function(suggestion) {
+                            /* $('#plaintiffFIO').trigger('change', suggestion.value);*/
+                            /*window.plaintiffFIO = suggestion.value;*/
+                            console.log(window);
+                        }
+                    });
+                </script>
                 <div class="mt-3">
                     <label for="plaintiffResidence" class="form-label">Место жительства</label>
                     <input type="text" class="form-control" id="plaintiffResidence" placeholder="Место жительства истца"
