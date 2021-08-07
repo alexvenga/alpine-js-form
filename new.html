@@ -542,16 +542,42 @@
 
                     <p>
                     <h2>Что взыскивать</h2>
-                    Взыскать с
-                    <span x-text="defendantFIO ? defendantFIO : '[Ф.И.О. ответчика]'"></span>
-                    в мою пользу алименты на содержание
-                    <span x-text="kids.length ? kidsCountHuman[kids.length] : '[количество детей]'"></span>
+                    <template x-if="!typeOfMoney">
+                        <span>[Уточните тип финансовых требований и их сумму]</span>
+                    </template>
                     <template x-if="typeOfMoney==='typeFixedSum'">
                         <span>
+                            Взыскать с
+                            <span x-text="defendantFIO ? defendantFIO : '[Ф.И.О. ответчика]'"></span>
+                            в мою пользу алименты на содержание
+                            <span x-text="kids.length ? kidsCountHuman[kids.length] : '[количество детей]'"></span>
                             в твердой денежной сумме
                             <span x-text="moneySum ? moneySum + ' руб.' : '[Введите сумму взыскания]'"></span>
                         </span>
                     </template>
+                    <template x-if="typeOfMoney==='typePercent'">
+                        <span>
+                            Взыскать с
+                            <span x-text="defendantFIO ? defendantFIO : '[Ф.И.О. ответчика]'"></span>
+                            в мою пользу алименты на содержание
+                            <span x-text="kids.length ? kidsCountHuman[kids.length] : '[количество детей]'"></span>
+                            в размере
+                            <template x-if="!kids.length">
+                                <span>[Уточните количество детей]</span>
+                            </template>
+                            <template x-if="kids.length===1">
+                                <span>1/4</span>
+                            </template>
+                            <template x-if="kids.length===2">
+                                <span>1/3</span>
+                            </template>
+                            <template x-if="kids.length>=3">
+                                <span>1/2</span>
+                            </template>
+                            от дохода
+                        </span>
+                    </template>
+
                     </p>
 
 
@@ -560,9 +586,7 @@
                     <p>
                     <hr>
                     Оставлю это тут - вдруг пригодится
-                    <template x-if="!typeOfMoney">
-                        <span>[Уточните тип финансовых требований и их сумму]</span>
-                    </template>
+
                     </p>
 
 
