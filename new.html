@@ -16,13 +16,24 @@
 
     function initBuildForm() {
 
-        const instanceAxios = axios.create({
+        const instanceAxiosSuggestions = axios.create({
             baseURL: 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/',
             timeout: 1000,
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 'Authorization': 'Token 7d365b045b496d3ab99d7f2080b5fec014865739'
+            }
+        });
+
+        const instanceAxiosClean = axios.create({
+            baseURL: 'https://cleaner.dadata.ru/api/v1/clean/',
+            timeout: 1000,
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': 'Token 7d365b045b496d3ab99d7f2080b5fec014865739',
+                'X-Secret': '352c6b5b733ff250b94496fcee30298bbc9f9b67'
             }
         });
 
@@ -87,7 +98,7 @@
 
             getFromDaDataFIO: async function (queryString) {
                 try {
-                    const response = await instanceAxios.post('fio', {
+                    const response = await instanceAxiosSuggestions.post('fio', {
                         query: queryString
                     });
                     return response.data.suggestions;
@@ -99,7 +110,7 @@
 
             getFromDaDataCity: async function (queryString) {
                 try {
-                    const response = await instanceAxios.post('address', {
+                    const response = await instanceAxiosSuggestions.post('address', {
                         query: queryString,
                         from_bound: {value: "city"},
                         to_bound: {value: "city"}
@@ -113,13 +124,26 @@
 
             getFromDaDataAddress: async function (queryString) {
                 try {
-                    const response = await instanceAxios.post('address', {
+                    const response = await instanceAxiosSuggestions.post('address', {
                         query: queryString
                     });
                     return response.data.suggestions;
                 } catch (err) {
                     console.log(err);
                     return [];
+                }
+            },
+
+            formatNameToNormal: async function (nameString) {
+                try {
+                    const response = await instanceAxiosClean.post('name', {
+                        name: nameString
+                    });
+                    console.log(response.data);
+                    return false;
+                } catch (err) {
+                    console.log(err);
+                    return nameString;
                 }
             },
         };
@@ -461,6 +485,14 @@
                     <hr>
                     <h4>Вариант второй (по идее, более правильный)</h4>
                     <span x-text="kidsCountHuman[kids.length]"></span>
+                    </p>
+
+                    <hr>
+
+                    <p>
+                        <h3>Имя истца</h3>
+                        <h4>Обычное форматированное</h4>
+                        <span x-text="plaintiffFIO ? formatNameToNormal(plaintiffFIO) : '[Ф.И.О. истца]'"></span>
                     </p>
 
                 </div>
