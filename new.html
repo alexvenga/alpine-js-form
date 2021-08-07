@@ -542,11 +542,25 @@
 
                     <p>
                     <h2>Что взыскивать</h2>
+                    Взыскать с
+                    <span x-text="defendantFIO ? defendantFIO : '[Ф.И.О. ответчика]'"></span>
+                    в мою пользу алименты на содержание
+                    <span x-text="kids.length ? kidsCountHuman[kids.length] : '[количество детей]'"></span>
+                    <template x-if="typeOfMoney==='typeFixedSum'">
+                        <span>в твердой денежной сумме
+                            <span x-text="moneySum ? moneySum + ' руб.' : '[Введите сумму взыскания]'"></span>
+                        </span>
+                    </template>
+                    </p>
+
+
+                    <hr>
+
+                    <p>
+                    <hr>
+                    Оставлю это тут - вдруг пригодится
                     <template x-if="!typeOfMoney">
                         <span>[Уточните тип финансовых требований и их сумму]</span>
-                    </template>
-                    <template x-if="typeOfMoney==='typeFixedSum'">
-                        <span x-text="moneySum ? moneySum + ' руб.' : '[Введите сумму взыскания]'"></span>
                     </template>
                     </p>
 
