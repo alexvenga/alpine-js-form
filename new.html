@@ -73,6 +73,9 @@
                 'шестеро детей',
             ],
 
+            typeOfMoney: '',
+            moneySum: '',
+
             kids: [],
             setKidsCount: function (count) {
                 while (this.kids.length < count) {
@@ -305,7 +308,6 @@
                     </select>
                 </div>
 
-
                 <template x-if="kids.length">
                     <template x-for="children in kids">
                         <div class="shadow-sm bg-body p-2 mt-3">
@@ -334,6 +336,47 @@
                         </div>
                     </template>
                 </template>
+
+                <hr>
+
+                <h5>В какой форме взыскиваются алименты</h5>
+                <div class="mt-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="typeFixedSum" value="typeFixedSum" name="typeOfMoney"
+                               x-model="typeOfMoney">
+                        <label class="form-check-label" for="typeFixedSum">
+                            В твердой денежной сумме
+                        </label>
+                    </div>
+                </div>
+                <template x-if="typeOfMoney==='typeFixedSum'">
+                    <div class="mt-3">
+                        <label for="moneySum" class="form-label">Сумма в рублях</label>
+                        <input type="number" min="1" class="form-control" id="moneySum" placeholder="Сумма в рублях"
+                               x-model="moneySum">
+                    </div>
+                </template>
+
+                <div class="mt-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="typePercent" value="typePercent" name="typeOfMoney"
+                               x-model="typeOfMoney">
+                        <label class="form-check-label" for="typePercent">
+                            В процентах от дохода
+                        </label>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="typeMixed" value="typeMixed" name="typeOfMoney"
+                               x-model="typeOfMoney">
+                        <label class="form-check-label" for="typeMixed">
+                            В смешанной форме
+                        </label>
+                    </div>
+                </div>
+
+                <div x-text="typeOfMoney"></div>
 
                 <hr>
 
@@ -490,10 +533,23 @@
                     <hr>
 
                     <p>
-                        <h3>Имя истца</h3>
-                        <h4>Обычное форматированное</h4>
-                        <span x-text="plaintiffFIO ? formatNameToNormal(plaintiffFIO) : '[Ф.И.О. истца]'"></span>
+                    <h3>Имя истца</h3>
+                    <h4>Обычное форматированное</h4>
+                    <span x-text="plaintiffFIO ? formatNameToNormal(plaintiffFIO) : '[Ф.И.О. истца]'"></span>
                     </p>
+
+                    <hr>
+
+                    <p>
+                    <h2>Что взыскивать</h2>
+                    <template x-if="!typeOfMoney">
+                        <span>[Уточните тип финансовых требований и их сумму]</span>
+                    </template>
+                    <template x-if="typeOfMoney==='typeFixedSum'">
+                        <span x-text="moneySum ? moneySum + ' руб.' : '[Введите сумму взыскания]'"></span>
+                    </template>
+                    </p>
+
 
                 </div>
 
