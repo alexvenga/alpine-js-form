@@ -32,13 +32,22 @@
             checkBoxSecond: true,
 
             courtType: 'Городской',
+
             cityName: '',
+            cityNameSuggestions: [],
+
             plaintiffFIO: '',
             plaintiffFIOSuggestions: [],
+
             plaintiffResidence: '',
+            plaintiffResidenceSuggestions: [],
+
             defendantFIO: '',
             defendantFIOSuggestions: [],
+
             defendantResidence: '',
+            defendantResidenceSuggestions: [],
+
             marriageStartDate: '',
             marriageEndDate: '',
 
@@ -77,10 +86,41 @@
             },
 
             getFromDaDataFIO: async function (queryString) {
-                const response = await instanceAxios.post('fio', {
-                    query: queryString
-                });
-                return response.data.suggestions;
+                try {
+                    const response = await instanceAxios.post('fio', {
+                        query: queryString
+                    });
+                    return response.data.suggestions;
+                } catch (err) {
+                    console.log(err);
+                    return [];
+                }
+            },
+
+            getFromDaDataCity: async function (queryString) {
+                try {
+                    const response = await instanceAxios.post('address', {
+                        query: queryString,
+                        from_bound: {value: "city"},
+                        to_bound: {value: "city"}
+                    });
+                    return response.data.suggestions;
+                } catch (err) {
+                    console.log(err);
+                    return [];
+                }
+            },
+
+            getFromDaDataAddress: async function (queryString) {
+                try {
+                    const response = await instanceAxios.post('address', {
+                        query: queryString
+                    });
+                    return response.data.suggestions;
+                } catch (err) {
+                    console.log(err);
+                    return [];
+                }
             },
         };
     }
@@ -114,10 +154,23 @@
                         </label>
                     </div>
                 </div>
-                <div class="mt-3">
+                <div class="mt-3 position-relative">
                     <label for="cityName" class="form-label">Город</label>
                     <input type="text" class="form-control" id="cityName" placeholder="Название города"
-                           x-model="cityName">
+                           x-model="cityName"
+                           @input.debounce.500ms="cityNameSuggestions = await getFromDaDataCity($el.value)">
+
+                    <template x-if="cityNameSuggestions.length">
+                        <div class="position-absolute bg-white shadow" style="z-index: 9999;">
+                            <div class="list-group">
+                                <template x-for="suggestion in cityNameSuggestions">
+                                    <button class="list-group-item list-group-item-action" type="button"
+                                            @click="cityName = $el.innerText; cityNameSuggestions = []"
+                                            x-text="suggestion.data.city"></button>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
                 </div>
 
                 <hr>
@@ -145,7 +198,19 @@
                 <div class="mt-3">
                     <label for="plaintiffResidence" class="form-label">Место жительства</label>
                     <input type="text" class="form-control" id="plaintiffResidence" placeholder="Место жительства истца"
-                           x-model="plaintiffResidence">
+                           x-model="plaintiffResidence"
+                           @input.debounce.500ms="plaintiffResidenceSuggestions = await getFromDaDataAddress($el.value)">
+                    <template x-if="plaintiffResidenceSuggestions.length">
+                        <div class="position-absolute bg-white shadow" style="z-index: 9999;">
+                            <div class="list-group">
+                                <template x-for="suggestion in plaintiffResidenceSuggestions">
+                                    <button class="list-group-item list-group-item-action" type="button"
+                                            @click="plaintiffResidence = $el.innerText; plaintiffResidenceSuggestions = []"
+                                            x-text="suggestion.value"></button>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
                 </div>
 
                 <hr>
@@ -172,7 +237,20 @@
                 <div class="mt-3">
                     <label for="defendantResidence" class="form-label">Место жительства</label>
                     <input type="text" class="form-control" id="defendantResidence" placeholder="Место жительства истца"
-                           x-model="defendantResidence">
+                           x-model="defendantResidence"
+                           @input.debounce.500ms="defendantResidenceSuggestions = await getFromDaDataAddress($el.value)">
+
+                    <template x-if="defendantResidenceSuggestions.length">
+                        <div class="position-absolute bg-white shadow" style="z-index: 9999;">
+                            <div class="list-group">
+                                <template x-for="suggestion in defendantResidenceSuggestions">
+                                    <button class="list-group-item list-group-item-action" type="button"
+                                            @click="defendantResidence = $el.innerText; defendantResidenceSuggestions = []"
+                                            x-text="suggestion.value"></button>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
                 </div>
 
                 <hr>
@@ -203,7 +281,7 @@
                     </select>
                 </div>
 
-                
+
                 <template x-if="kids.length">
                     <template x-for="children in kids">
                         <div class="shadow-sm bg-body p-2 mt-3">
